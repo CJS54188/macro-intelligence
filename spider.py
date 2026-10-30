@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import yagmail
-from deep_translator import GoogleTranslator
+import translators as ts
 
 # 解决云端 Linux 系统没有中文字体的问题
 plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei']
@@ -13,17 +13,16 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 }
 
-# === 新增：翻译函数 ===
 def translate_text(text):
     if not text or text == '未知':
         return text
     try:
-        # 调用谷歌翻译，自动识别源语言，翻译成中文(zh-CN)
-        translated = GoogleTranslator(source='auto', target='zh-CN').translate(text)
+        # 使用必应翻译通道，对 GitHub 服务器更友好
+        translated = ts.translate_text(text, translator='bing', from_language='en', to_language='zh')
         return translated
     except Exception as e:
-        # 如果翻译失败（比如网络波动），就保留原文，防止程序崩溃
-        return text 
+        # 失败则保留原文
+        return text
 
 def spy_jobs():
     print("\\n[1/3] 正在潜入全球远程工作节点 (RemoteOK)...")
@@ -40,7 +39,6 @@ def spy_jobs():
                 salary_max = job.get('salary_max', 0)
                 
                 if salary_min > 0:
-                    # 翻译职位名称
                     translated_position = translate_text(position)
                     jobs.append({
                         '公司': company,
@@ -79,7 +77,6 @@ def spy_news():
                     title = item.get('title', '未知标题')
                     score = item.get('score', 0)
                     
-                    # 翻译新闻标题
                     translated_title = translate_text(title)
                     news_data.append({
                         '新闻标题(中文)': translated_title,
@@ -91,7 +88,6 @@ def spy_news():
             df_news.to_excel('全球极客热搜.xlsx', index=False)
             print(f" -> 截获 {len(df_news)} 条热搜，已翻译并存入 Excel")
             
-            # 画图并保存（图表上使用中文）
             plt.figure(figsize=(10, 6))
             df_news = df_news.iloc[::-1] 
             df_news['短标题'] = df_news['新闻标题(中文)'].apply(lambda x: x[:15] + '...' if len(x) > 15 else x)
