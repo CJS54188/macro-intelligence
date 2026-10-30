@@ -28,7 +28,7 @@ jobs:
       run: python spider.py
 
     - name: Upload Excel Files
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Macro-Data-Files
         path: |
