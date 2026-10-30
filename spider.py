@@ -38,7 +38,7 @@ def spy_jobs():
                 salary_min = job.get('salary_min', 0)
                 salary_max = job.get('salary_max', 0)
                 
-                if salary_min > 0:
+                if salary_min > 30000:
                     translated_position = translate_text(position)
                     jobs.append({
                         '公司': company,
