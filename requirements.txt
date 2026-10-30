@@ -3,4 +3,4 @@ pandas
 matplotlib
 openpyxl
 yagmail
-deep-translator
+translators
