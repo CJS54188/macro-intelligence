@@ -95,3 +95,30 @@ print("====== 宏观双线侦察行动开始 ======")
 spy_jobs()
 spy_news()
 print("\\n====== 侦察行动结束 ======")
+# === 新增：发送邮件模块 ===
+import os
+import yagmail
+
+def send_email():
+    print("--- 正在打包情报，发送至指定邮箱 ---")
+    mail_user = os.environ.get('MAIL_USER')
+    mail_pass = os.environ.get('MAIL_PASS')
+    mail_to = os.environ.get('MAIL_TO')
+
+    try:
+        # 登录 163 邮箱的 SMTP 服务器
+        yag = yagmail.SMTP(user=mail_user, password=mail_pass, host='smtp.163.com')
+        
+        subject = "【宏观智能】今日数据情报已送达"
+        contents = "主公，今日的全球高薪岗位与新闻热搜已抓取完毕，请查阅附件。"
+        
+        # 附件列表（确保你的抓取代码生成的确实是这两个名字）
+        attachments = ['全球高薪技术岗位.xlsx', '全球极客热搜.xlsx']
+        
+        yag.send(to=mail_to, subject=subject, contents=contents, attachments=attachments)
+        print(" -> 邮件发送成功！")
+    except Exception as e:
+        print(f" -> 邮件发送失败: {e}")
+
+# 调用发信函数
+send_email()
